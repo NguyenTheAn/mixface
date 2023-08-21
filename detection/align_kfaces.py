@@ -6,7 +6,7 @@ import argparse
 from alignment import warp_and_crop_face, get_reference_facial_points
 from retinaface.detector import RetinafaceDetector
 
-
+import cv2
 """
     ###################################################################
 
@@ -39,7 +39,7 @@ def create_aligned_kface_dataset(ori_data_path,
                                  detector,
                                  output_img_size=(112,112)):
 
-    accessories = ['S' + str(a).zfill(3) for a in range(1, 6 + 1)]
+    accessories = ['S' + str(a).zfill(3) for a in range(1, 3)]
     luces = ['L' + str(l) for l in range(1, 30 + 1)]
     expressions = ['E' + str(e).zfill(2) for e in range(1,3 + 1)]
     poses = ['C' + str(p) for p in range(1, 20 + 1)]
@@ -63,8 +63,12 @@ def create_aligned_kface_dataset(ori_data_path,
                         copy_image_path = os.path.join(copy_dir, p) + '.jpg'
                         raw = cv.imread(ori_image_path)
                         if a == 'S001' and l == 'L1' and e == 'E01':
-                            _, facial5points = detector.detect_faces(raw)
-                            facial5points = np.reshape(facial5points[0], (2, 5))
+                            label_file = ori_image_path.replace(".jpg", ".txt")
+                            idx_ = [1, 2, 0, 3, 4]
+                            with open(label_file, 'r') as file:
+                                lines = file.readlines()
+                                facial5points = np.array([np.array([int(lines[i].strip().split("\t")[0]), int(lines[i].strip().split("\t")[1])]) for i in idx_])
+                            facial5points = facial5points.T
                         
                         default_square = True
                         inner_padding_factor = 0.25
