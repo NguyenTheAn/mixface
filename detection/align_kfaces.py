@@ -39,7 +39,7 @@ def create_aligned_kface_dataset(ori_data_path,
                                  detector,
                                  output_img_size=(112,112)):
 
-    accessories = ['S' + str(a).zfill(3) for a in range(1, 3)]
+    accessories = ['S' + str(a).zfill(3) for a in range(1, 6+1)]
     luces = ['L' + str(l) for l in range(1, 30 + 1)]
     expressions = ['E' + str(e).zfill(2) for e in range(1,3 + 1)]
     poses = ['C' + str(p) for p in range(1, 20 + 1)]
